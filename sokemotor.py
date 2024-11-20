@@ -1,47 +1,67 @@
-def load_file(file_path):
-    """leser tekstfil fra en filbane (file_path) 
-    returnerer innholdet i filen som en liste med linjer og den 
-    den printer ut at det er en feil hvis den ikke finner filen du har søkt etter."""
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            return file.readlines()
-    except FileNotFoundError:
-        print(f"Feil: Finner ikke filen {file_path}.")
-        main()
+def printMeny():
+    print("------------------- Søkemotor Meny -------------------")
+    print("| 1. Vis innholdet i en fil                          |")
+    print("| 2. Søk etter tekst i en fil                        |")
+    print("| 3. Avslutt                                         |")
+    print("------------------------------------------------------")
+    menyvalg = input("Velg et alternativ (1-3): ")
+    utfoerMenyvalg(menyvalg)
 
-def search_word(content, search_term):
-    """Søker etter et ord i teksten og returnerer linjer som inneholder ordet."""
-    results = []
-    for line_number, line in enumerate(content, start=1):
-        if search_term.lower() in line.lower():  # Case-insensitivt søk
-            results.append((line_number, line.strip()))
-    return results
-
-def print_results(results, search_term):
-    """Skriver ut resultatene av søket til terminalen."""
-    if results:
-        print(f"Fant '{search_term}' i følgende linjer:")
-        for line_number, line in results:
-            print(f"Linje {line_number}: {line}")
+def utfoerMenyvalg(valgtTall):
+    if valgtTall == "1":
+        visInnhold()
+    elif valgtTall == "2":
+        sokIFil()
+    elif valgtTall == "3":
+        print("Avslutter programmet.")
+        exit()
     else:
-        print(f"Fant ingen resultater for '{search_term}'.")
+        print("Ugyldig valg. Prøv igjen.")
+        printMeny()
 
-def main():
-    """Hovedfunksjon for søkemotoren."""
-    print("Velkommen til den Leandro sin søkemotor!")
-    file_path = input("Skriv inn filnavnet : ")
-    content = load_file(file_path)
-    
-    if not content:  # Avbryt hvis filen ikke finnes
-        return
-    
-    while True:
-        search_term = input("Skriv inn ordet du vil søke etter (trykk enter for å se alt, 'exit' eller 'avslutt' for å avslutte): ")
-        if search_term.lower() in ['avslutt','exit']:
-            print("Avslutter søkemotoren. Ha en fin dag!")
-            break
-        results = search_word(content, search_term)
-        print_results(results, search_term)
+def listFiler():
+    # Faste filer i programmet
+    return [
+        "DetteErGøy.txt",
+        "leandro.txt",
+        "tekstfil1.txt",
+        "tekstfil2.txt",
+        "tekstfil3.txt",
+    ]
 
-if __name__ == "__main__":
-    main()
+def visInnhold():
+    filer = listFiler()
+    for idx, fil in enumerate(filer, 1):
+        print(f"{idx}. {fil}")
+    try:
+        valg = int(input("Velg nummeret til filen du vil vise: "))
+        valgtFil = filer[valg - 1]
+        with open(valgtFil, "r", encoding="utf-8") as file:
+            print(f"\nInnholdet i {valgtFil}:\n{'-' * 50}")
+            print(file.read())
+    except (IndexError, ValueError, FileNotFoundError):
+        print("Feil! Sjekk filnummeret eller filen eksisterer kanskje ikke.")
+    printMeny()
+
+def sokIFil():
+    filer = listFiler()
+    for idx, fil in enumerate(filer, 1):
+        print(f"{idx}. {fil}")
+    try:
+        valg = int(input("Velg nummeret til filen du vil søke i: "))
+        valgtFil = filer[valg - 1]
+        soketxt = input("Skriv inn teksten du vil søke etter: ")
+        with open(valgtFil, "r", encoding="utf-8") as file:
+            treff = [linje.strip() for linje in file if soketxt.lower() in linje.lower()]
+            if treff:
+                print(f"\nTreff for '{soketxt}' i {valgtFil}:\n{'-' * 50}")
+                for linje in treff:
+                    print(linje)
+            else:
+                print(f"Ingen treff for '{soketxt}' i {valgtFil}.")
+    except (IndexError, ValueError, FileNotFoundError):
+        print("Feil! Sjekk filnummeret eller filen eksisterer kanskje ikke.")
+    printMeny()
+
+# Start menyen
+printMeny()
