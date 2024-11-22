@@ -16,7 +16,7 @@ def search_word(content, search_term):
     Returnerer en liste med treff som inneholder linjenummer og linjeinnhold.
     """
     results = []
-    for line_number, line in enumerate(content, start=1):  # Itererer med linjenummer
+    for line_number, line in enumerate(content, start=1):  
         if search_term.lower() in line.lower():  # Søker case-insensitivt
             results.append((line_number, line.strip()))  # Legger til linjetreff
     return results
