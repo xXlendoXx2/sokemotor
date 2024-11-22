@@ -73,7 +73,8 @@ def search_in_file(file_path):
     if content:
         while True:  # Tillater flere søk i samme fil
             search_term = input("\nSkriv inn teksten du vil søke etter ('return' eller 'exit' for å gå tilbake): ")
-            if search_term.lower() in ["return", "exit"]:  # Avbryt hvis brukeren skriver "avslutt"
+            if search_term.lower() in ["return", "exit"]:  
+                # går tilbake til hovedmenyen hvis brukeren skriver "return" eller "exit"
                 break
             results = search_word(content, search_term)  # Søker i filen
             if results:
@@ -104,13 +105,19 @@ def main_menu():
         elif choice == "2":  # Brukeren vil søke i en fil
             file_path = choose_file()  # Lar brukeren velge fil
             search_in_file(file_path)  # Søker i innholdet i den valgte filen
-        elif choice == "3":  # Brukeren vil avslutte
-              bekreftelse = input("Er du sikker på at du vil avslutte? J/N ")
-              if (bekreftelse == "J" or bekreftelse == "j"):
-                print("Avslutter programmet. Ha en fin dag!")
-                exit()
-               
-            
+        elif choice == "3": 
+            while True:  # løkke for å sikre korrekt input
+                bekreftelse = input("Er du sikker på at du vil avslutte? J/N ").strip().lower()  
+                # Fjern mellomrom og mulig å bruke små bokstaver uten å repetere kode
+                if bekreftelse == "j":
+                    print("Avslutter programmet. Ha en fin dag!")
+                    exit()
+                elif bekreftelse == "n":
+                    main_menu()
+                    break  # Avslutt løkken når brukeren ikke vil avslutte
+                else:
+                    print("Feil, skriv enten J eller N.")  
+
         else:
             print("Ugyldig valg. Skriv inn 1, 2 eller 3.")  # Feilmelding for ugyldige valg
 
